@@ -986,6 +986,6 @@ c.grid(column=3, row=1)
 c = Checkbutton(tab2, text="Absurdly Blatamt", variable=cg10, onvalue=18, offvalue=19, command=lvl10)
 c.grid(column=4, row=1)
 
-#===== Section: Tab 2 End =====
+#===== Section: Tab 2 End ======
 
 window.mainloop()

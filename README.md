@@ -48,3 +48,10 @@ After your IP is set in the IP.py file simply run KorozinRMTv2.py like any other
 #### Tab 2
 
 ![tab 2](https://user-images.githubusercontent.com/90534409/161439190-5304afa4-1562-44d2-b65d-29a236b69588.png)
+
+
+### April 3rd: Added 10 new codes to make the tool more useful / fun.
+
+#### Image of new added codes
+
+![New codes](https://user-images.githubusercontent.com/90534409/161441562-608f8fe0-dfa1-4825-939e-af4e8444fe44.png)

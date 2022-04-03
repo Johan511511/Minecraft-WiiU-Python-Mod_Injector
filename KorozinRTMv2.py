@@ -16,7 +16,7 @@ import os
 
 window = Tk()
 window.title('Korozin RTM V2')
-window.geometry('580x110')
+window.geometry('655x150')
 tabControl = ttk.Notebook(window)
 
 tab1 = ttk.Frame(tabControl)
@@ -566,8 +566,309 @@ def takeAll():
         canv.geometry('200x40')
         btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
         
-def auraMenu():
-    os.system("python AuraMenu.py")
+def noClip():
+    if cb16.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x0232E644, 0xFFFFFFFF)
+        tcp.s.close()
+        print("No-Clip is now active!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb16.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x0232E644, 0xFC20F890)
+        tcp.s.close()
+        print("No-Clip disabled!")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def riptidePunch():
+    if cb17.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x031F5484, 0x88630390)
+        tcp.s.close()
+        print("Riptide Punch is now active!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb17.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x031F5484, 0x88630A08)
+        tcp.s.close()
+        print("Riptide Punch disabled!")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def riptideAnywhere():
+    if cb18.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x0232C210, 0x38600001)
+        tcp.s.close()
+        print("Riptide Punch is now active!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb18.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x0232C210, 0x38600000)
+        tcp.s.close()
+        print("Riptide Punch disabled!")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def rodDMG():
+    if cb19.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x10610AB8, 0x3F800000)
+        tcp.s.close()
+        print("Rods now do damage!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb19.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x10610AB8, 0x3F800000)
+        tcp.s.close()
+        print("Rods no longer do damage!")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def explosiveArrows():
+    if cb20.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x020063F0, 0x487E23A4)
+        tcp.s.close()
+        print("Arrows and tridnets now explode!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb20.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x020063F0, 0x7C0802A6)
+        tcp.s.close()
+        print("Arrows and tridnets no longer explode!")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def Speed():
+    if cb21.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x1066AAE8, 0x3F76F5C3)
+        tcp.pokemem(0x1066879C, 0x3DF5C28F)
+        tcp.pokemem(0x1066ACC8, 0x3EB9BD1F)
+        tcp.s.close()
+        print("You now have speed!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb21.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x1066AAE8, 0x3F68F5C3)
+        tcp.pokemem(0x1066879C, 0x3CA3D70A)
+        tcp.pokemem(0x1066ACC8, 0x3E26AD89)
+        tcp.s.close()
+        print("You no longer have speed!")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def antiKB():
+    if cb22.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x0257D85C, 0x4E800020)
+        tcp.s.close()
+        print("You no longer take KnockBack!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb22.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x0257D85C, 0x9421FFA8)
+        tcp.s.close()
+        print("You now take KnockBack")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def allPerms():
+    if cb22.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x02C57E94, 0x38600001)
+        tcp.pokemem(0x02C57E34, 0x38600001)
+        tcp.pokemem(0x02C51C20, 0x38600001)
+        tcp.pokemem(0x02C5CC84, 0x38600001)
+        tcp.pokemem(0x02C57D74, 0x38600001)
+        tcp.pokemem(0x02C57DD4, 0x38600001)
+        tcp.s.close()
+        print("All perms now activated!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb22.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x02C57E94, 0x57E3063E)
+        tcp.pokemem(0x02C57E34, 0x57E3063E)
+        tcp.pokemem(0x02C51C20, 0x57E3063E)
+        tcp.pokemem(0x02C5CC84, 0x88630124)
+        tcp.pokemem(0x02C57D74, 0x57E3063E)
+        tcp.pokemem(0x02C57DD4, 0x57E3063E)
+        tcp.s.close()
+        print("You no longer have all perms!")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def fullBright():
+    if cb24.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x108C7C2C, 0x60000000)
+        tcp.s.close()
+        print("You can now see in the dark!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb24.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x108C7C2C, 0x3CF5C28F)
+        tcp.s.close()
+        print("Sight set back to normal")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
+        
+def lockServer():
+    if cb25.get() == 1:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x02D5B28C, 0x3BC00001)
+        tcp.s.close()
+        print("Your server is now locked!")
+        canv = Tk()
+        canv.title('Codes Sent!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    elif cb25.get() == 0:
+        tcp = TCPGecko(IP_Addr)
+        tcp.pokemem(0x02D5B28C, 0x3BC00008)
+        tcp.s.close()
+        print("Server unlocked!")
+        canv = Tk()
+        canv.title('Code Disabled!')
+        canv.geometry('200x40')
+        btn = Button(canv, text="                           OK!                           ", bd='5', bg="black",                         fg="white",command=canv.destroy)
+        btn.pack(side='top')
+        canv.mainloop()
+    else:
+        canv = Tk()
+        canv.title('Error!')
+        canv.geometry('200x40')
+        btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
         
 #===== Section: Defined Functions End =====
 
@@ -863,7 +1164,7 @@ def lvl10():
         canv.geometry('200x40')
         btn = Button(canv, text = "ERROR!", bd='5', bg="black",                      fg="white",command=canv.destroy)
 
-#===== SectuibL Tab 2 Defined Functions End ====
+#===== Section Tab 2 Defined Functions End ====
 
 
 #===== Section: Tab 1 =====
@@ -883,6 +1184,16 @@ cb12 = IntVar()
 cb13 = IntVar()
 cb14 = IntVar()
 cb15 = IntVar()
+cb16 = IntVar()
+cb17 = IntVar()
+cb18 = IntVar()
+cb19 = IntVar()
+cb20 = IntVar()
+cb21 = IntVar()
+cb22 = IntVar()
+cb23 = IntVar()
+cb24 = IntVar()
+cb25 = IntVar()
 
 c = Checkbutton(tab1, text="Mega-Code", variable=cb, onvalue=1, offvalue=0, command=megaCode)
 c.grid(column=0, row=0)
@@ -928,6 +1239,36 @@ c.grid(column=3, row=2)
 
 c = Checkbutton(tab1, text="Take All", variable=cb15, onvalue=27, offvalue=28, command=takeAll)
 c.grid(column=4, row=2)
+
+c = Checkbutton(tab1, text="No-Clip", variable=cb16, onvalue=1, offvalue=0, command=noClip)
+c.grid(column=0, row=3)
+
+c = Checkbutton(tab1, text="Riptide Punch", variable=cb17, onvalue=1, offvalue=0, command=riptidePunch)
+c.grid(column=1, row=3)
+
+c = Checkbutton(tab1, text="Riptide Anywhere", variable=cb18, onvalue=1, offvalue=0, command=riptideAnywhere)
+c.grid(column=2, row=3)
+
+c = Checkbutton(tab1, text="Rods Do Damage", variable=cb19, onvalue=1, offvalue=0, command=rodDMG)
+c.grid(column=3, row=3)
+
+c = Checkbutton(tab1, text="Arrows Explode", variable=cb20, onvalue=1, offvalue=0, command=explosiveArrows)
+c.grid(column=4, row=3)
+
+c = Checkbutton(tab1, text="Speed", variable=cb21, onvalue=1, offvalue=0, command=Speed)
+c.grid(column=0, row=4)
+
+c = Checkbutton(tab1, text="Anti-KB", variable=cb22, onvalue=1, offvalue=0, command=antiKB)
+c.grid(column=1, row=4)
+
+c = Checkbutton(tab1, text="All Perms", variable=cb23, onvalue=1, offvalue=0, command=allPerms)
+c.grid(column=2, row=4)
+
+c = Checkbutton(tab1, text="Full Bright", variable=cb24, onvalue=1, offvalue=0, command=fullBright)
+c.grid(column=3, row=4)
+
+c = Checkbutton(tab1, text="Lock Server", variable=cb25, onvalue=1, offvalue=0, command=lockServer)
+c.grid(column=4, row=4)
 
 #===== Section: Tab 1 End =====
 

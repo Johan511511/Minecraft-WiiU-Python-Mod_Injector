@@ -36,3 +36,15 @@ After your IP is set in the IP.py file simply run KorozinRMTv2.py like any other
 #### Example of changing IP
 
 ![IP-select](https://user-images.githubusercontent.com/90534409/161388789-79b1fdef-021d-492d-9d41-2af428c7f692.png)
+
+# Changelogs:
+
+### April 2nd:  Added tabs for seperate menus instead of opening new sub menus. Hopefully this makes it more seamless.
+
+#### Tab 1
+
+![tab 1](https://user-images.githubusercontent.com/90534409/161439174-96f711a0-401a-4a8c-b870-69c2ba1f6d78.png)
+
+#### Tab 2
+
+![tab 2](https://user-images.githubusercontent.com/90534409/161439190-5304afa4-1562-44d2-b65d-29a236b69588.png)

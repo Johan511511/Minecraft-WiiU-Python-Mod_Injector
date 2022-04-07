@@ -15,7 +15,10 @@ Tkinter
 
 ### To Run:
 
-After your IP is set in the IP.py file simply run KorozinRMTv2.py like any other .py file.
+~~After your IP is set in the IP.py file~~ 
+IP.py is no longer required! Simply run the application and set the IP Address from within.
+
+simply run KorozinRMTv4.py like any other .py file.
 
 ### Images
 

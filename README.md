@@ -30,10 +30,6 @@ simply run KorozinRMTv4.py like any other .py file.
 
 ![Running](https://user-images.githubusercontent.com/90534409/161388777-701df958-304b-4dda-b1b0-a4759632ea4b.png)
 
-#### Example of changing IP
-
-![IP-select](https://user-images.githubusercontent.com/90534409/161388789-79b1fdef-021d-492d-9d41-2af428c7f692.png)
-
 # Changelogs:
 
 ### April 2nd:  Added tabs for seperate menus instead of opening new sub menus. Hopefully this makes it more seamless.

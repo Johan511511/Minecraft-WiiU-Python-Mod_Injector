@@ -6,13 +6,7 @@ This is just a simple tkinter GUI to send Memory Write codes to your game, these
 
 ## Setup:
 
-To begin with open IP.py and replace the existing Wii U IPv4 with your OWN or else it will not work. This is because IP.py assigns the
-variable IP_Addr with the specific IP set which the GUI will then use to connect to that Wii U.     For example the line in the GUI 
-
-```python
-tcp = TCPGecko(IP_Addr)
-```
-Takes the IP_Addr variable from the IP.py file to be able to connect.
+### NOTICE! IP.py is no longer required! I have added a way to set the IP_Addr variable from in the GUI.
 
 ### The following modules are required!
 
@@ -55,3 +49,9 @@ After your IP is set in the IP.py file simply run KorozinRMTv2.py like any other
 #### Image of new added codes
 
 ![New codes](https://user-images.githubusercontent.com/90534409/161441562-608f8fe0-dfa1-4825-939e-af4e8444fe44.png)
+
+### April 7th: Removed need for importing TCPGecko.py, created a way to set the Wii U IP from within the GUI
+
+#### Image of new GUI tab
+
+![2022-04-07_05-20](https://user-images.githubusercontent.com/90534409/162125743-57031aca-a7b0-41b2-91d0-51ee0e19b42e.png)

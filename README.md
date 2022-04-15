@@ -54,3 +54,5 @@ simply run KorozinRMTv4.py like any other .py file.
 #### Image of new GUI tab
 
 ![2022-04-07_05-20](https://user-images.githubusercontent.com/90534409/162125743-57031aca-a7b0-41b2-91d0-51ee0e19b42e.png)
+
+### April 13th: Improvements to code stability, not much to show.

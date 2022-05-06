@@ -56,3 +56,8 @@ simply run KorozinRMTv4.py like any other .py file.
 ![2022-04-07_05-20](https://user-images.githubusercontent.com/90534409/162125743-57031aca-a7b0-41b2-91d0-51ee0e19b42e.png)
 
 ### April 13th: Improvements to code stability, not much to show.
+
+
+### May 6th: Completely rewrote connection process for an actual active connection instead of just setting a variable for the IP.   Added Disconnect feature.    Last used IP now saved to ip.config
+
+![2022-05-06_17-26](https://user-images.githubusercontent.com/90534409/167182247-55af45dc-b3b4-4285-a9b9-ce2be99a7844.png)

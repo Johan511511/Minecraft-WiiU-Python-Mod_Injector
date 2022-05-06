@@ -6,6 +6,15 @@ from tkinter import *
 import tkinter as tkinter
 import sys
 import os
+import struct
+import time
+import os.path
+import socket, sys
+from threading import Thread, RLock
+import py_compile
+import atexit
+import webbrowser
+config_exist = os.path.isfile("ip.config") 
 
 #===== Imports End =====
 
@@ -430,6 +439,19 @@ def getstr(data, pos): #Keep incrementing till you hit a stop
 
 #===== Main Window =====
 
+s1_ptr = 0x112395AC
+s2_ptr = 0x112395B4
+s3_ptr = 0x112395B0
+name_ptr = 0x121F2C94
+
+freemem = 0x3F000000
+
+def str_end(string, ind):
+	for i in range(0, 0xFFFF):
+		x = string[ind+i:ind+i+1:1]
+		if x == "\x00":
+			return string[ind:ind+i:1]
+
 window = Tk()
 window.title('Korozin RTM V2')
 window.geometry('655x150')
@@ -459,28 +481,47 @@ print("""
 
 #===== Section: Tab 1 =====
 
-def clickMe():
-    label.configure(text= 'Connected to: ' + name.get())
-    print('name.get value set!')
-    print(name.get())
-    IP_Addr = (name.get())
-    print('IP_Addr value set!')
-    print(IP_Addr)
+verrou = RLock()
 
+def connect():
+	ip = nip.get()
+	global tcp, f_config
+	tcp = TCPGecko(ip)
+	x = tcp.readmem(name_ptr, 20)
+	x = str_end(x, 0)
+	tcp.pokemem(0x1076f7a8, 0x000000FF)
+	temp_vars = []
+	f_config.seek(0, 0)
+	f_config.write(ip)
+	f_config.close()
+	
+def disc():
+	with verrou:
+		global temp_vars
+		temp_vars = []
+		tcp.s.close()
+		print("Disconnected.")
+		
+blank = Label(tab1, text="Connection")
+blank.grid(row=0, column = 0)
 
-label = ttk.Label(tab1, text = "Enter Your IP")
-label.grid(column = 0, row = 0)
+if config_exist == False:
+	nip = StringVar()
+	nip.set("Wii U IP Addr")
+	f_config = open("ip.config", "a+")
+else:
+	nip = StringVar()
+	f_config = open("ip.config", "r+")
+	nip.set(f_config.read())
 
+n_ip = Entry(tab1, textvariable=nip)
+n_ip.grid(row=1, column=0)
 
+cnn = Button(tab1, text="Connect", command=connect)
+cnn.grid(row=1, column=1)
 
-
-name = tk.StringVar()
-nameEntered = ttk.Entry(tab1, width = 15, textvariable = name)
-nameEntered.grid(column = 0, row = 1)
-
-
-button = ttk.Button(tab1, text = "Connect!", command = clickMe)
-button.grid(column= 0, row = 2) 
+b_disconnect = Button(tab1, text="Disconnect", command=disc)
+b_disconnect.grid(row=1, column=2)
 
 #===== Section: Tab 1 End =====
 
@@ -488,17 +529,15 @@ button.grid(column= 0, row = 2)
 
 def armorHud():
     if cb.get() == 2:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02E9B1B0, 0x7FE4FB78)
-        tcp.s.close()
+
         print("You can now see the armor hud like in mini-games!")
         
     elif cb.get() == 3:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02E9B1B0, 0x7FC4F378)
-        tcp.s.close()
+
         print("Armor Hud Disabled")
         
     else:
@@ -509,8 +548,7 @@ def armorHud():
         
 def megaCode():
     if cb2.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x030FA0C8, 0x616500FF)
         tcp.pokemem(0x030FA014, 0x2C090001)
         tcp.pokemem(0x030F9C50, 0x7F24CB78)
@@ -545,11 +583,10 @@ def megaCode():
         tcp.pokemem(0x0205C430, 0x38600000)
         tcp.pokemem(0x031B2B4C, 0x38600001)
         tcp.pokemem(0x02F5C874, 0x38600001)
-        tcp.s.close()
+
         print("Mega code is now activated!")
     elif cb2.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02F70970, 0x38600000)
         tcp.pokemem(0x032283CC, 0x38800001)
         tcp.pokemem(0x02F59534, 0x7C0802A6)
@@ -575,7 +612,7 @@ def megaCode():
         tcp.pokemem(0x030FA0C8, 0x38A5FFFF)
         tcp.pokemem(0x030FA014, 0x2C090000)
         tcp.pokemem(0x030F9C50, 0x388000FF)
-        tcp.s.close()
+
         print("Mega code is now disabled!")
         canv = Tk()
         canv.title('Code Disabled!')
@@ -591,19 +628,17 @@ def megaCode():
         
 def craftAll():
     if cb3.get() == 3:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02F70970, 0x38600001)
         tcp.pokemem(0x032283CC, 0x38800001)
         tcp.pokemem(0x02F59534, 0x7C0802A6)
-        tcp.s.close()
+
         print("Craft all now active!")
         
     elif cb3.get() == 4:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02F70970, 0x38600000)
-        tcp.s.close()
+
         print("Disabling has not yet been implemented for this code")
         
     else:
@@ -614,17 +649,15 @@ def craftAll():
         
 def fly():
     if cb4.get() == 5:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0271AA74, 0x38600001)
-        tcp.s.close()
+
         print("You can now fly!")
         
     elif cb4.get() == 6:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0271AA74, 0x38600000)
-        tcp.s.close()
+
         print("Fly disabled!")
         
     else:
@@ -635,19 +668,17 @@ def fly():
         
 def FOFbypass():
     if cb5.get() == 7:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02D5731C, 0x38600001)
         tcp.pokemem(0x02D57320, 0x4E800020)
-        tcp.s.close()
+
         print("You can now bypass Friends of Friends!")
         
     elif cb5.get() == 8:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02D5731C, 0x7C0802A6)
         tcp.pokemem(0x02D57320, 0x9421FFF0)
-        tcp.s.close()
+
         print("FOF Disabled")
         
     else:
@@ -658,18 +689,16 @@ def FOFbypass():
         
 def host():
     if cb6.get() == 9:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02F17B30, 0x38807D00)
-        tcp.s.close()
+
         print("You can now use host options anywhere!")
         
     elif cb6.get() == 10:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02D5731C, 0x7C0802A6)
         tcp.pokemem(0x02D57320, 0x9421FFF0)
-        tcp.s.close()
+
         print("Host options disabled!")
         
     else:
@@ -680,17 +709,15 @@ def host():
         
 def multiJump():
     if cb7.get() == 11:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0232F3A0, 0x38800001)
-        tcp.s.close()
+
         print("Multi-Jump is now active!")
         
     elif cb7.get() == 12:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0232F3A0, 0x38800000)
-        tcp.s.close()
+
         print("Multi-Jump disabled!")
         
     else:
@@ -701,17 +728,15 @@ def multiJump():
         
 def muteMic():
     if cb8.get() == 13:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x10997EA8, 0x30000000)
-        tcp.s.close()
+
         print("Your mic is now muted!")
         
     elif cb8.get() == 14:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x10997EA8, 0x3F000000)
-        tcp.s.close()
+
         print("Mute mic disabled!")
         
     else:
@@ -722,17 +747,15 @@ def muteMic():
         
 def reach():
     if cb9.get() == 15:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x108C9C20, 0x50090000)
-        tcp.s.close()
+
         print("Reach = 3 blocks")
         
     elif cb9.get() == 16:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x108C9C20, 0x40080000)
-        tcp.s.close()
+
         print("reach disabled")
         
     else:
@@ -743,25 +766,23 @@ def reach():
         
 def keyboard():
     if cb10.get() == 17:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02F88110, 0x39400002)
         tcp.pokemem(0x02FAF4F0, 0x39400002)
         tcp.pokemem(0x02FAF560, 0x39400002)
         tcp.pokemem(0x02FAF5DC, 0x39400002)
         tcp.pokemem(0x02FAF64C, 0x39400002)
-        tcp.s.close()
+
         print("The entire keyboard is now unlocked!")
         
     elif cb10.get() == 18:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02F88110, 0x39400003)
         tcp.pokemem(0x02FAF4F0, 0x39400003)
         tcp.pokemem(0x02FAF560, 0x39400003)
         tcp.pokemem(0x02FAF5DC, 0x39400003)
         tcp.pokemem(0x02FAF64C, 0x39400003)
-        tcp.s.close()
+
         print("Keyboard locked!")
         
     else:
@@ -772,17 +793,15 @@ def keyboard():
         
 def FOV():
     if cb11.get() == 19:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x1088EDA8, 0x3F800000)
-        tcp.s.close()
+
         print("FOV Enhanced")
         
     elif cb11.get() == 20:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x1088EDA8, 0x3F000000)
-        tcp.s.close()
+
         print("FOV Reset")
         
     else:
@@ -793,21 +812,19 @@ def FOV():
         
 def Hitbox():
     if cb12.get() == 21:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x030FA0C8, 0xFFFFFFFF)
         tcp.pokemem(0x030FA014, 0x2C090001)
         tcp.pokemem(0x030F9C50, 0xFFFFFFFF)
-        tcp.s.close()
+
         print("Hitbox now shown!")
         
     elif cb12.get() == 22:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x030FA0C8, 0xFFFFFFFF)
         tcp.pokemem(0x030FA014, 0x2C090001)
         tcp.pokemem(0x030F9C50, 0xFFFFFFFF)
-        tcp.s.close()
+
         print("Hitbox now shown!")
         canv = Tk()
         canv.title('Disabling for this code has not yet been added.')
@@ -823,8 +840,7 @@ def Hitbox():
         
 def itemJava():
     if cb13.get() == 23:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0316760C, 0x60000000)
         tcp.pokemem(0x0316762C, 0xFC80F090)
         tcp.pokemem(0x03168DCC, 0xEC4F6BFA)
@@ -834,12 +850,11 @@ def itemJava():
         tcp.pokemem(0x0384CEC8, 0xC02C0110)
         tcp.pokemem(0x0384CECC, 0x4B91A770)
         tcp.pokemem(0x03167638, 0x486E5884)
-        tcp.s.close()
+
         print("Item Drop animation has now been modified!")
         
     elif cb13.get() == 24:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0316760C, 0x60000000)
         tcp.pokemem(0x0316762C, 0xFC80F090)
         tcp.pokemem(0x03168DCC, 0xEC4F6BFA)
@@ -849,7 +864,7 @@ def itemJava():
         tcp.pokemem(0x0384CEC8, 0xC02C0110)
         tcp.pokemem(0x0384CECC, 0x4B91A770)
         tcp.pokemem(0x03167638, 0x486E5884)
-        tcp.s.close()
+
         print("Disabling for this code has not yet been added.")
         
     else:
@@ -860,19 +875,17 @@ def itemJava():
         
 def offhand():
     if cb14.get() == 25:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x024FD7F4, 0x38600001)
         tcp.pokemem(0x0207F604, 0x38600001)
-        tcp.s.close()
+
         print("All item slots have been unlocked! (eg offhand and body slots)")
         
     elif cb14.get() == 26:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x024FD7F4, 0x38600000)
         tcp.pokemem(0x0207F604, 0x38600000)
-        tcp.s.close()
+
         print("Item slots back to normal")
         
     else:
@@ -883,17 +896,15 @@ def offhand():
         
 def takeAll():
     if cb15.get() == 27:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02DEC0B4, 0x38600001)
-        tcp.s.close()
+
         print("You can now take everything from chests!")
         
     elif cb15.get() == 28:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02DEC0B4, 0x57E3063E)
-        tcp.s.close()
+
         print("You can no longer take everything")
         canv = Tk()
         canv.title('Code Disabled')
@@ -909,17 +920,15 @@ def takeAll():
         
 def noclip():
     if cb16.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0232E644, 0xFFFFFFFF)
-        tcp.s.close()
+
         print("No-ClIP_Addr is now active!")
         
     elif cb16.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0232E644, 0xFC20F890)
-        tcp.s.close()
+
         print("No-ClIP_Addr disabled!")
         
     else:
@@ -930,17 +939,15 @@ def noclip():
         
 def riptidePunch():
     if cb17.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x031F5484, 0x88630390)
-        tcp.s.close()
+
         print("RIP_Addrtide Punch is now active!")
         
     elif cb17.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x031F5484, 0x88630A08)
-        tcp.s.close()
+
         print("RIP_Addrtide Punch disabled!")
         
     else:
@@ -951,17 +958,15 @@ def riptidePunch():
         
 def riptideAnywhere():
     if cb18.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0232C210, 0x38600001)
-        tcp.s.close()
+
         print("RIP_Addrtide Punch is now active!")
         
     elif cb18.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0232C210, 0x38600000)
-        tcp.s.close()
+
         print("RIP_Addrtide Punch disabled!")
         
     else:
@@ -972,17 +977,15 @@ def riptideAnywhere():
         
 def rodDMG():
     if cb19.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x10610AB8, 0x3F800000)
-        tcp.s.close()
+
         print("Rods now do damage!")
         
     elif cb19.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x10610AB8, 0x3F800000)
-        tcp.s.close()
+
         print("Rods no longer do damage!")
         
     else:
@@ -993,17 +996,15 @@ def rodDMG():
         
 def explosiveArrows():
     if cb20.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x020063F0, 0x487E23A4)
-        tcp.s.close()
+
         print("Arrows and tridnets now explode!")
         
     elif cb20.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x020063F0, 0x7C0802A6)
-        tcp.s.close()
+
         print("Arrows and tridnets no longer explode!")
         
     else:
@@ -1014,21 +1015,19 @@ def explosiveArrows():
         
 def Speed():
     if cb21.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x1066AAE8, 0x3F76F5C3)
         tcp.pokemem(0x1066879C, 0x3DF5C28F)
         tcp.pokemem(0x1066ACC8, 0x3EB9BD1F)
-        tcp.s.close()
+
         print("You now have speed!")
         
     elif cb21.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x1066AAE8, 0x3F68F5C3)
         tcp.pokemem(0x1066879C, 0x3CA3D70A)
         tcp.pokemem(0x1066ACC8, 0x3E26AD89)
-        tcp.s.close()
+
         print("You no longer have speed!")
         
     else:
@@ -1039,17 +1038,15 @@ def Speed():
         
 def antiKB():
     if cb22.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0257D85C, 0x4E800020)
-        tcp.s.close()
+
         print("You no longer take KnockBack!")
         
     elif cb22.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x0257D85C, 0x9421FFA8)
-        tcp.s.close()
+
         print("You now take KnockBack")
         
     else:
@@ -1060,27 +1057,25 @@ def antiKB():
         
 def allPerms():
     if cb22.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02C57E94, 0x38600001)
         tcp.pokemem(0x02C57E34, 0x38600001)
         tcp.pokemem(0x02C51C20, 0x38600001)
         tcp.pokemem(0x02C5CC84, 0x38600001)
         tcp.pokemem(0x02C57D74, 0x38600001)
         tcp.pokemem(0x02C57DD4, 0x38600001)
-        tcp.s.close()
+
         print("All perms now activated!")
         
     elif cb22.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02C57E94, 0x57E3063E)
         tcp.pokemem(0x02C57E34, 0x57E3063E)
         tcp.pokemem(0x02C51C20, 0x57E3063E)
         tcp.pokemem(0x02C5CC84, 0x88630124)
         tcp.pokemem(0x02C57D74, 0x57E3063E)
         tcp.pokemem(0x02C57DD4, 0x57E3063E)
-        tcp.s.close()
+
         print("You no longer have all perms!")
         
     else:
@@ -1091,17 +1086,15 @@ def allPerms():
         
 def fullBright():
     if cb24.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x108C7C2C, 0x60000000)
-        tcp.s.close()
+
         print("You can now see in the dark!")
         
     elif cb24.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x108C7C2C, 0x3CF5C28F)
-        tcp.s.close()
+
         print("Sight set back to normal")
         
     else:
@@ -1112,17 +1105,15 @@ def fullBright():
         
 def lockServer():
     if cb25.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02D5B28C, 0x3BC00001)
-        tcp.s.close()
+
         print("Your server is now locked!")
         
     elif cb25.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x02D5B28C, 0x3BC00008)
-        tcp.s.close()
+
         print("Server unlocked!")
         
     else:
@@ -1137,17 +1128,15 @@ def lockServer():
 
 def lvl1():
     if cg.get() == 1:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F100000)
-        tcp.s.close()
+
         print("Aura Lvl 1 is now active")
         
     elif cg.get() == 0:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1158,17 +1147,15 @@ def lvl1():
         
 def lvl2():
     if cg2.get() == 2:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F200000)
-        tcp.s.close()
+
         print("Aura Lvl 2 is now active")
         
     elif cg2.get() == 3:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1179,17 +1166,15 @@ def lvl2():
         
 def lvl3():
     if cg3.get() == 4:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F300000)
-        tcp.s.close()
+
         print("Aura Lvl 3 is now active")
         
     elif cg3.get() == 5:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1200,17 +1185,15 @@ def lvl3():
         
 def lvl4():
     if cg4.get() == 6:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F400000)
-        tcp.s.close()
+
         print("Aura Lvl 4 is now active")
         
     elif cg4.get() == 7:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1221,17 +1204,15 @@ def lvl4():
         
 def lvl5():
     if cg5.get() == 8:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F500000)
-        tcp.s.close()
+
         print("Aura Lvl 5 is now active")
         
     elif cg5.get() == 9:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1242,17 +1223,15 @@ def lvl5():
         
 def lvl6():
     if cg6.get() == 10:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F600000)
-        tcp.s.close()
+
         print("Aura Lvl 6 is now active")
         
     elif cg6.get() == 11:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1263,17 +1242,15 @@ def lvl6():
         
 def lvl7():
     if cg7.get() == 12:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F700000)
-        tcp.s.close()
+
         print("Aura Lvl 7 is now active")
         
     elif cg7.get() == 13:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1284,17 +1261,15 @@ def lvl7():
         
 def lvl8():
     if cg8.get() == 14:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F800000)
-        tcp.s.close()
+
         print("Aura Lvl 8 is now active")
         
     elif cg8.get() == 15:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1305,17 +1280,15 @@ def lvl8():
         
 def lvl9():
     if cg9.get() == 16:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3FF00000)
-        tcp.s.close()
+
         print("In the words of 9 year olds: You're a hackowr")
         
     elif cg9.get() == 17:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
@@ -1326,17 +1299,15 @@ def lvl9():
         
 def lvl10():
     if cg10.get() == 18:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x41099999)
-        tcp.s.close()
+
         print("I think you just became god")
         
     elif cg10.get() == 19:
-        IP_Addr = (name.get())
-        tcp = TCPGecko(IP_Addr)
+
         tcp.pokemem(0x105DD948, 0x3F000000)
-        tcp.s.close()
+
         print("Aura reset!")
         
     else:
